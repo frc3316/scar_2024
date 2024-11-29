@@ -27,6 +27,12 @@ public class RobotContainer {
     m_Controller.circle().onTrue(new InstantCommand(() -> m_arm.drawCircle(20)));
   }
 
+  private Command getCompetativeDrowCommand(double firstR){
+    double R = firstR;
+    for (int i = 0; i<9; i++)
+
+  }
+
 
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
