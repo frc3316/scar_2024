@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 
 import frc.robot.motors.PIDFGains;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Servo;
 import frc.robot.constants.ArmConstants;
 import edu.wpi.first.wpilibj.Servo;
@@ -13,6 +14,8 @@ import frc.robot.motors.DBugSparkMax;
 
 
 public class Arm extends SubsystemBase{
+
+    private static final boolean UPDATE_DASHBOARD = true;
 
     private DBugSparkMax _base;
     private Servo _wrist;
@@ -66,7 +69,8 @@ public class Arm extends SubsystemBase{
         double wristAngle = Math.acos((Math.pow(ArmConstants.armlength1, 2)+ Math.pow(ArmConstants.armlength2, 2) - Math.pow(R, 2))/ 2 * ArmConstants.armlength1 * ArmConstants.armlength2);
         this.setWristAngle(wristAngle);
         double startBaseAngle = getBaseAngle();
-        this._base.set(BaseState.CIRCLE.velocity);
+        this.baseState = BaseState.CIRCLE;
+        this._base.set(baseState.velocity);
 
         while (startBaseAngle != getBaseAngle()) {
             this.setWristAngle(wristAngle);
@@ -78,7 +82,8 @@ public class Arm extends SubsystemBase{
     public void drawSquare(){
         double radius = Math.sqrt((Math.pow(ArmConstants.armlength1, 2)+ Math.pow(ArmConstants.armlength2, 2) - 2 * ArmConstants.armlength1 * ArmConstants.armlength2) * Math.cos(getWristAngle()));
         double startBaseAngle = getBaseAngle()%360;
-        this._base.set(BaseState.SQUARE.velocity);
+        this.baseState = BaseState.SQUARE;
+        this._base.set(baseState.velocity);
         double ARM_LENGTH3;
         double targetY;
         double targetX;
@@ -130,6 +135,29 @@ public class Arm extends SubsystemBase{
         }
         this._base.set(BaseState.OFF.velocity);
 
+    }
+
+    public void getCompetativeDrow(double firstR){
+        double R = firstR;
+        for (int i = 0; i<9; i++){
+            
+            double radius = firstR + i*1.5;
+            SmartDashboard.putNumber("radius", radius);
+            this.drawCircle(radius);
+            this.drawSquare();
+        }
+    }
+    private void updateSDB() {
+        SmartDashboard.putNumber("Wrist angle", this.getWristAngle());
+        SmartDashboard.putNumber("Base angle", this.getBaseAngle());
+        SmartDashboard.putNumber("servoZeroPos", servoZeroPos);
+    }
+
+    @Override
+    public void periodic() {
+        if(UPDATE_DASHBOARD) {
+            updateSDB();
+        }
     }
 
 

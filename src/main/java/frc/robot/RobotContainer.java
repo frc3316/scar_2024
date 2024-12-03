@@ -5,8 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.constants.JoysticksConstants;
 import frc.robot.subsystems.Arm;
 import frc.robot.humanIO.CommandPS5Controller;
@@ -24,18 +22,15 @@ public class RobotContainer {
 
   private void configureBindings() {
     m_Controller.square().onTrue(new InstantCommand(() -> m_arm.drawSquare()));
-    m_Controller.circle().onTrue(new InstantCommand(() -> m_arm.drawCircle(20)));
-  }
-
-  private Command getCompetativeDrowCommand(double firstR){
-    double R = firstR;
-    for (int i = 0; i<9; i++)
-
+    m_Controller.circle().onTrue(new InstantCommand(() -> m_arm.drawCircle(100)));
+    m_Controller.triangle().onTrue(new InstantCommand(() -> m_arm.getCompetativeDrow(100)));
+    m_Controller.cross().onTrue(new InstantCommand(()-> m_arm.resetPosotion()));
   }
 
 
-  public Command getAutonomousCommand() {
+
+  /*public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
-  }
+  }*/
 }
