@@ -15,22 +15,30 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
     private final Arm m_arm = new Arm();
     private final CommandPS5Controller m_Controller = new CommandPS5Controller(JoysticksConstants.driverPort);
+    private Double Radius = 250.0;
   public RobotContainer() {
-    
+    configureBindings();
   }
 
 
   private void configureBindings() {
-    m_Controller.square().onTrue(new InstantCommand(() -> m_arm.drawSquare()));
-    m_Controller.circle().onTrue(new InstantCommand(() -> m_arm.drawCircle(100)));
-    m_Controller.triangle().onTrue(new InstantCommand(() -> m_arm.getCompetativeDrow(100)));
-    m_Controller.cross().onTrue(new InstantCommand(()-> m_arm.resetPosotion()));
+    m_Controller.square().onTrue(m_arm.getCommandDrawSquare(Radius));
+      //m_Controller.square().onFalse(new InstantCommand(() -> m_arm.stop()));
+    m_Controller.circle().onTrue(new InstantCommand(() -> m_arm.drawCircle(Radius),m_arm));
+      m_Controller.circle().onFalse(new InstantCommand(()-> m_arm.stop()));
+    m_Controller.cross().onTrue(new InstantCommand(() -> {this.Radius+=15;}));
+    m_Controller.triangle().onTrue(new InstantCommand(() -> {this.Radius-=15;}));
+    m_Controller.L1().onTrue(new InstantCommand(() -> m_arm.changeDirection()));
+    //m_Controller.triangle().onTrue(new InstantCommand(() -> m_arm.getCompetativeDrow(100)));
+    m_Controller.R1().onTrue(new InstantCommand(()-> m_arm.testNeo()));
+        m_Controller.R1().onFalse(new InstantCommand(()-> m_arm.offNeo()));
   }
 
 
 
   /*public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
+    // An example command will
+     be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
   }*/
 }
